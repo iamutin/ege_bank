@@ -1,0 +1,21 @@
+/* Стили для математического контента */
+.math-content {
+    line-height: 2;
+}
+
+/* Стили для формул MathJax */
+.math-content .MathJax {
+    font-size: 1.1em;
+    margin: 0.5em 0;
+}
+
+/* Стили для inline-формул */
+.math-content .MathJax_Display {
+    margin: 1em 0;
+}
+
+/* Подсветка формул при наведении */
+.math-content .MathJax:hover {
+    background-color: #f8f9fa;
+    border-radius: 3px;
+}

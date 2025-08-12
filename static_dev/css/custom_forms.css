@@ -1,0 +1,5 @@
+.small-input-group {
+  width: 150px !important;
+  flex-shrink: 0;
+  display: flex;
+}

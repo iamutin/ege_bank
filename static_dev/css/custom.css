@@ -1,0 +1,56 @@
+/* Контейнер пагинации */
+.pagination {
+  display: flex;
+  list-style: none;
+  justify-content: center;
+  padding-left: 0;
+}
+
+/* Каждый элемент пагинации */
+.page-item {
+  margin: 0 4px;
+}
+
+/* Кнопка пагинации — по умолчанию */
+.page-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50% !important;
+  border: 1px solid #ccc;
+  color: #000;
+  text-decoration: none;
+  background-color: #f1f1f1;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  padding: 0;
+  line-height: 1;
+}
+
+/* Hover-эффект */
+.page-link:hover {
+  background-color: #e2e6ea;
+  color: #000;
+}
+
+/* Активная страница */
+.page-item.active .page-link {
+  background-color: #84cefa;   /* Твой фирменный голубой */
+  color: #fff;
+  border-color: #84cefa;
+  font-weight: bold;
+}
+
+/* Disabled — для "..." */
+.page-item.disabled .page-link {
+  background-color: transparent;
+  border: none;
+  color: #999;
+  cursor: default;
+  width: auto;
+  height: auto;
+  line-height: normal;
+  border-radius: 0;
+}

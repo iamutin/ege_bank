@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  Лента записей
+{% endblock %}
+{% block content %}
+  {% include "includes/paginator.html" %}
+  {% for problem in page_obj %}
+    <article class="mb-5">
+      {% include "includes/post_card.html" %}
+    </article>
+  {% endfor %}
+  {% include "includes/paginator.html" %}
+
+<!-- Подключаем JavaScript-файл -->
+<script src="{% static 'js/check_answer.js' %}"></script>
+<script src="{% static 'js/check_match_answer.js' %}"></script>
+{% endblock %}

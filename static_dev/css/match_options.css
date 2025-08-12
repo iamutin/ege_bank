@@ -1,0 +1,47 @@
+.match-option-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  position: relative; /* Добавлено для корректного позиционирования */
+}
+
+.match-option-label {
+  min-width: 40px;
+  font-weight: 600;
+  flex-shrink: 0; /* Запрещаем сжатие */
+}
+
+.match-option-content {
+  max-width: 150px;
+  flex-shrink: 0; /* Запрещаем сжатие изображения */
+}
+
+.match-option-image {
+  max-height: 120px;
+  display: block;
+  margin-bottom: 0.25rem;
+  border-radius: 0.25rem;
+  width: 100%;
+  object-fit: contain;
+}
+
+.match-option-image.original-size {
+  width: auto !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: unset !important;
+  display: block;
+}
+
+.match-option-text {
+  font-size: 0.875rem;
+  color: #6c757d;
+  white-space: pre-wrap;
+}
+
+.custom-dropdown {
+  flex-grow: 1; /* Добавлено для заполнения пространства */
+  min-width: 200px; /* Гарантированная минимальная ширина */
+}

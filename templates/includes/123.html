@@ -1,0 +1,104 @@
+{% load static %}
+{% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Задача</title>
+
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="{% static 'css/custom_dropdown.css' %}" />
+    <script src="{% static 'js/mathjax-config.js' %}"></script>
+    <script src="{% static 'js/custom_dropdown.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+      /* Дополнительные стили для ширины dropdown */
+      .custom-dropdown {
+        width: 100%;
+        position: relative;
+      }
+
+      .custom-dropdown .dropdown-toggle {
+        width: 100%;
+        padding: 6px 12px;
+        font-size: 1rem;
+      }
+
+      .custom-dropdown .dropdown-menu {
+        width: 100%;
+        max-width: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container py-5">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Задача № {{ problem.number }}</h5>
+          <p class="card-text">{{ problem.text|linebreaksbr|safe }}</p>
+
+          {% if problem.illustration %}
+          <img
+            src="{{ problem.illustration.url }}"
+            class="img-thumbnail img-fluid rounded mx-auto d-block mt-3"
+            alt="Иллюстрация к задаче"
+          />
+          {% endif %}
+
+          {% if problem.task_type == 'match' %}
+          <form id="match-form-{{ problem.id }}" class="match-form mt-4">
+            {% for option in problem.match_options.all %}
+            <div class="row align-items-center mb-4">
+              <!-- Метка (А, Б и т.д.) -->
+              <div class="col-auto">
+                <label class="form-label mb-0">{{ option.label }}:</label>
+              </div>
+
+              <!-- Контент (изображение или формула) -->
+              <div class="col">
+                {% if option.image %}
+                <img
+                  src="{{ option.image.url }}"
+                  alt="Изображение {{ option.label }}"
+                  class="img-fluid"
+                />
+                {% else %}
+                <div>{{ option.text|safe }}</div>
+                {% endif %}
+              </div>
+
+              <!-- Кастомный dropdown -->
+              <div class="col-md-7">
+                <div
+                  class="custom-dropdown"
+                  data-option-id="{{ option.id }}"
+                  data-correct-answer-id="{{ option.correct_answer.id }}"
+                >
+                  <button type="button" class="dropdown-toggle">
+                    Выберите вариант
+                  </button>
+                  <ul class="dropdown-menu">
+                    {% for answer_option in problem.match_answer_options.all %}
+                    <li data-value="{{ answer_option.id }}">
+                      {{ answer_option.label }}. {{ answer_option.text|safe }}
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary">Проверить</button>
+          </form>
+
+          <div id="result-message-{{ problem.id }}" class="result-message mt-3"></div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

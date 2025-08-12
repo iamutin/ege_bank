@@ -1,0 +1,15 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# poetry
+poetry.lock
+
+/media
+
+# Environments
+.env
+.venv
+
+# PyCharm
+.idea/
+/db.sqlite3
