@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', function (event) {
       event.preventDefault();
 
-      const input = this.querySelector('input');
-      const userAnswer = input.value; // строго без .trim()
+      const input = this.querySelector('input[type="text"][name="answer"]');
+      const userAnswer = input.value;
       const correctAnswer = this.dataset.correctAnswer;
       const messageDiv = this.nextElementSibling;
 
