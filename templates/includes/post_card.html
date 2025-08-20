@@ -6,79 +6,95 @@
     <h5 class="card-title fw-bold">Задача № {{ problem.number }}</h5>
     <p class="card-text">{{ problem.text|safe }}</p>
 
-    <div class="row">
-      <!-- Левая колонка с графиками -->
-      <div class="col-md-6">
-        <table class="table table-bordered align-middle text-center">
+    {# ----- Если это задача с сопоставлением ----- #}
+    {% if problem.left_options.exists and problem.right_options.exists %}
+      <div class="row">
+        <!-- Левая колонка с графиками -->
+        <div class="col-md-6">
+          <table class="table table-bordered align-middle text-center">
+            <thead>
+              <tr>
+                <th scope="col">ГРАФИКИ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for left in problem.left_options.all %}
+              <tr>
+                <td class="fw-bold">
+                  {{ left.label|cyrillic }}
+                  {% if left.image %}
+                    <div>
+                      <img src="{{ left.image.url }}" alt="{{ left.label }}" class="img-fluid" style="max-height: 120px;">
+                    </div>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Правая колонка с физическими величинами -->
+        <div class="col-md-6">
+          <table class="table table-bordered align-middle">
+            <thead>
+              <tr>
+                <th scope="col">ФИЗИЧЕСКИЕ ВЕЛИЧИНЫ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for right in problem.right_options.all %}
+              <tr>
+                <td>{{ forloop.counter }}) {{ right.text }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Ответ: таблица для выбора -->
+      <form class="answer-form mt-3" data-problem-id="{{ problem.id }}">
+        <table class="table table-bordered align-middle text-center w-auto">
           <thead>
             <tr>
-              <th scope="col">ГРАФИКИ</th>
+              {% for left in problem.left_options.all %}
+              <th>{{ left.label|cyrillic }}</th>
+              {% endfor %}
             </tr>
           </thead>
           <tbody>
-            {% for left in problem.left_options.all %}
             <tr>
-              <td class="fw-bold">
-                {{ left.label|cyrillic }}
-                {% if left.image %}
-                  <div>
-                    <img src="{{ left.image.url }}" alt="{{ left.label }}" class="img-fluid" style="max-height: 120px;">
-                  </div>
-                {% endif %}
+              {% for left in problem.left_options.all %}
+              <td>
+                <select class="form-select answer-select"
+                        name="answer_{{ left.id }}"
+                        data-correct-answer-id="{{ left.pair.right_option.id }}">
+                  <option value="">—</option>
+                  {% for right in problem.right_options.all %}
+                  <option value="{{ right.id }}">{{ forloop.counter }}</option>
+                  {% endfor %}
+                </select>
               </td>
+              {% endfor %}
             </tr>
-            {% endfor %}
           </tbody>
         </table>
-      </div>
+        <button type="submit" class="btn btn-primary">Ответить</button>
+      </form>
+      <div class="answer-result mt-2"></div>
 
-      <!-- Правая колонка с физическими величинами -->
-      <div class="col-md-6">
-        <table class="table table-bordered align-middle">
-          <thead>
-            <tr>
-              <th scope="col">ФИЗИЧЕСКИЕ ВЕЛИЧИНЫ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for right in problem.right_options.all %}
-            <tr>
-              <td>{{ forloop.counter }}) {{ right.text }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Ответ: таблица для выбора -->
-    <form class="answer-form mt-3" data-problem-id="{{ problem.id }}">
-      <table class="table table-bordered align-middle text-center w-auto">
-        <thead>
-          <tr>
-            {% for left in problem.left_options.all %}
-            <th>{{ left.label|cyrillic }}</th>
-            {% endfor %}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            {% for left in problem.left_options.all %}
-            <td>
-              <select class="form-select answer-select" name="answer_{{ left.id }}">
-                <option value="">—</option>
-                {% for right in problem.right_options.all %}
-                <option value="{{ right.id }}">{{ forloop.counter }}</option>
-                {% endfor %}
-              </select>
-            </td>
-            {% endfor %}
-          </tr>
-        </tbody>
-      </table>
-      <button type="submit" class="btn btn-primary">Ответить</button>
-    </form>
-
-    <div class="answer-result mt-2"></div>
+    {% else %}
+    {# ----- Если это простая задача с текстовым ответом ----- #}
+      <form class="answer-form mt-3"
+            data-problem-id="{{ problem.id }}"
+            data-correct-answer="{{ problem.correct_answer }}">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" name="answer" placeholder="Ваш ответ">
+          <button type="submit" class="btn btn-primary">Ответить</button>
+        </div>
+      </form>
+      <div class="answer-result mt-2"></div>
+    {% endif %}
   </div>
 </div>

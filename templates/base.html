@@ -16,9 +16,7 @@
     <link rel="stylesheet" href="{% static 'css/flash.css' %}">
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     <link rel="stylesheet" href="{% static 'css/match_options.css' %}">
-    <link rel="stylesheet" href="{% static 'css/custom_dropdown.css' %}">
     <link rel="stylesheet" href="{% static 'css/custom_forms.css' %}">
-    <script src="{% static 'js/custom_dropdown.js' %}"></script>
     <script src="{% static 'js/mathjax-config.js' %}"></script>
 
 
@@ -33,5 +31,7 @@
       </div>
     </main>
     {% include "includes/footer.html" %}
+  <!-- Подключаем JavaScript-файл -->
+  <script src="{% static 'js/check_answer.js' %}"></script>
   </body>
 </html>

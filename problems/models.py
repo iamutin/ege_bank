@@ -49,57 +49,92 @@ class Problem(models.Model):
         verbose_name_plural = "задачи"
 
 
-class MatchAnswerOption(models.Model):
+class MatchLeftOption(models.Model):
+    """Левая часть (А и Б)"""
+
     problem = models.ForeignKey(
         Problem,
         on_delete=models.CASCADE,
-        related_name="match_answer_options",
+        related_name="left_options",
         verbose_name="Задача",
     )
-    label = models.CharField(max_length=1, verbose_name="Метка (например, 1, 2, 3, 4)")
-    text = models.TextField(verbose_name="Текст варианта")
-
-    class Meta:
-        ordering = ["label"]
-        unique_together = ("problem", "label")
-        verbose_name = "Вариант ответа (справа)"
-        verbose_name_plural = "Варианты ответа (справа)"
-
-    def __str__(self):
-        return f"{self.problem} — Вариант {self.label}"
-
-
-class MatchOption(models.Model):
-    problem = models.ForeignKey(
-        Problem,
-        on_delete=models.CASCADE,
-        related_name="match_options",
-        verbose_name="Задача",
+    label = models.CharField(
+        max_length=1,
+        choices=[("A", "A"), ("B", "B")],
+        verbose_name="Метка (A или Б)",
     )
-    label = models.CharField(max_length=1, verbose_name="Метка")
     text = models.TextField(
-        blank=True, null=True, verbose_name="Текст формулы или описания"
+        blank=True,
+        null=True,
+        verbose_name="Текст (например, формула или описание)",
     )
     image = models.ImageField(
-        upload_to="match_options/",
+        upload_to="match_left/",
         blank=True,
         null=True,
         verbose_name="Изображение (если есть)",
     )
-    correct_answer = models.ForeignKey(
-        MatchAnswerOption,
-        on_delete=models.CASCADE,
-        related_name="+",
-        verbose_name="Правильный ответ",
-        null=True,
-        blank=True,
-    )
 
     class Meta:
         ordering = ["label"]
         unique_together = ("problem", "label")
-        verbose_name = "Соответствие (A или Б)"
-        verbose_name_plural = "Соответствия (A и Б)"
+        verbose_name = "Элемент слева (А или Б)"
+        verbose_name_plural = "Элементы слева (А и Б)"
 
     def __str__(self):
-        return f"{self.problem} — {self.label}"
+        return f"{self.label}"
+
+
+class MatchRightOption(models.Model):
+    """Правая часть (варианты 1–4)"""
+
+    problem = models.ForeignKey(
+        Problem,
+        on_delete=models.CASCADE,
+        related_name="right_options",
+        verbose_name="Задача",
+    )
+    index = models.PositiveSmallIntegerField(
+        choices=[(i, str(i)) for i in range(1, 5)],
+        verbose_name="Номер варианта (1–4)",
+    )
+    text = models.TextField(verbose_name="Текст варианта")
+
+    class Meta:
+        ordering = ["index"]
+        unique_together = ("problem", "index")
+        verbose_name = "Вариант справа (1–4)"
+        verbose_name_plural = "Варианты справа (1–4)"
+
+    def __str__(self):
+        return f"{self.index}"
+
+
+class MatchPair(models.Model):
+    """Правильная связка: A/Б → 1–4"""
+
+    problem = models.ForeignKey(
+        Problem,
+        on_delete=models.CASCADE,
+        related_name="pairs",
+        verbose_name="Задача",
+    )
+    left_option = models.OneToOneField(
+        MatchLeftOption,
+        on_delete=models.CASCADE,
+        related_name="pair",
+        verbose_name="Элемент слева (A или Б)",
+    )
+    right_option = models.ForeignKey(
+        MatchRightOption,
+        on_delete=models.CASCADE,
+        related_name="pairs",
+        verbose_name="Правильный вариант справа (1–4)",
+    )
+
+    class Meta:
+        verbose_name = "Соответствие (A → 1)"
+        verbose_name_plural = "Соответствия (A → 1)"
+
+    def __str__(self):
+        return f"{self.left_option.label} → {self.right_option.index}"
