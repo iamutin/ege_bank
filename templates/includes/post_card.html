@@ -6,26 +6,33 @@
     <h5 class="card-title fw-bold">Задача № {{ problem.number }}</h5>
     <p class="card-text">{{ problem.text|safe }}</p>
 
+    {% if problem.illustration %}
+      <div class="mb-3 text-center">
+        <img src="{{ problem.illustration.url }}" alt="Иллюстрация к задаче" class="img-fluid" style="max-height: 400px;">
+      </div>
+    {% endif %}
+
+
     {# ----- Если это задача с сопоставлением ----- #}
-    {% if problem.left_options.exists and problem.right_options.exists %}
+    {% if problem.task_type == "match" %}
       <div class="row">
-        <!-- Левая колонка с графиками -->
+        <!-- Левая колонка -->
         <div class="col-md-6">
           <table class="table table-bordered align-middle text-center">
-            <thead>
-              <tr>
-                <th scope="col">ГРАФИКИ</th>
-              </tr>
-            </thead>
             <tbody>
               {% for left in problem.left_options.all %}
               <tr>
-                <td class="fw-bold">
+                <!-- Буква слева -->
+                <td class="fw-bold align-middle" style="width: 50px;">
                   {{ left.label|cyrillic }}
+                </td>
+                <!-- Картинка справа -->
+                <td>
                   {% if left.image %}
-                    <div>
-                      <img src="{{ left.image.url }}" alt="{{ left.label }}" class="img-fluid" style="max-height: 120px;">
-                    </div>
+                    <img src="{{ left.image.url }}"
+                         alt="{{ left.label }}"
+                         class="img-fluid"
+                         style="max-height: 120px;">
                   {% endif %}
                 </td>
               </tr>
@@ -34,14 +41,9 @@
           </table>
         </div>
 
-        <!-- Правая колонка с физическими величинами -->
+        <!-- Правая колонка -->
         <div class="col-md-6">
           <table class="table table-bordered align-middle">
-            <thead>
-              <tr>
-                <th scope="col">ФИЗИЧЕСКИЕ ВЕЛИЧИНЫ</th>
-              </tr>
-            </thead>
             <tbody>
               {% for right in problem.right_options.all %}
               <tr>
